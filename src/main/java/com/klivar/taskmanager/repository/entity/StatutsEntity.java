@@ -1,10 +1,10 @@
-package com.klivar.taskmanager.model;
+package com.klivar.taskmanager.repository.entity;
 
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "statuts")
-public class Statuts {
+public class StatutsEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

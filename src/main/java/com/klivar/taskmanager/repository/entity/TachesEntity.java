@@ -1,4 +1,4 @@
-package com.klivar.taskmanager.model;
+package com.klivar.taskmanager.repository.entity;
 
 import jakarta.persistence.*;
 
@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "taches")
-public class Taches {
+public class TachesEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,15 +30,15 @@ public class Taches {
 
     @ManyToOne
     @JoinColumn(name = "statut_id", referencedColumnName = "id", nullable = false)
-    private Statuts statutId;
+    private StatutsEntity statutId;
 
     @ManyToOne
     @JoinColumn(name = "categorie_id", referencedColumnName = "id", nullable = false)
-    private Categories categorieId;
+    private CategoriesEntity categorieId;
 
     @ManyToOne
     @JoinColumn(name = "utilisateur_id", referencedColumnName = "id", nullable = false)
-    private Utilisateurs utilisateurId;
+    private UtilisateursEntity utilisateurId;
 
     public Long getId() {
         return id;
@@ -88,27 +88,27 @@ public class Taches {
         this.priorite = priorite;
     }
 
-    public Statuts getStatutId() {
+    public StatutsEntity getStatutId() {
         return statutId;
     }
 
-    public void setStatutId(Statuts statutId) {
+    public void setStatutId(StatutsEntity statutId) {
         this.statutId = statutId;
     }
 
-    public Categories getCategorieId() {
+    public CategoriesEntity getCategorieId() {
         return categorieId;
     }
 
-    public void setCategorieId(Categories categorieId) {
+    public void setCategorieId(CategoriesEntity categorieId) {
         this.categorieId = categorieId;
     }
 
-    public Utilisateurs getUtilisateurId() {
+    public UtilisateursEntity getUtilisateurId() {
         return utilisateurId;
     }
 
-    public void setUtilisateurId(Utilisateurs utilisateurId) {
+    public void setUtilisateurId(UtilisateursEntity utilisateurId) {
         this.utilisateurId = utilisateurId;
     }
 }

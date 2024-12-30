@@ -1,19 +1,19 @@
 package com.klivar.taskmanager.service;
 
-import com.klivar.taskmanager.controller.TacheRequest;
-import com.klivar.taskmanager.model.Categories;
-import com.klivar.taskmanager.model.Statuts;
-import com.klivar.taskmanager.model.Taches;
-import com.klivar.taskmanager.model.Utilisateurs;
-import com.klivar.taskmanager.repository.CategoriesRepository;
-import com.klivar.taskmanager.repository.StatutsRepository;
-import com.klivar.taskmanager.repository.TachesRepository;
-import com.klivar.taskmanager.repository.UtilisateursRepository;
+import com.klivar.taskmanager.domain.mapper.TachesMapper;
+import com.klivar.taskmanager.web.dto.TacheDTO;
+import com.klivar.taskmanager.repository.entity.CategoriesEntity;
+import com.klivar.taskmanager.repository.entity.StatutsEntity;
+import com.klivar.taskmanager.repository.entity.TachesEntity;
+import com.klivar.taskmanager.repository.entity.UtilisateursEntity;
+import com.klivar.taskmanager.repository.repository.CategoriesRepository;
+import com.klivar.taskmanager.repository.repository.StatutsRepository;
+import com.klivar.taskmanager.repository.repository.TachesRepository;
+import com.klivar.taskmanager.repository.repository.UtilisateursRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TachesService {
@@ -30,59 +30,60 @@ public class TachesService {
     @Autowired
     private UtilisateursRepository utilisateursRepository;
 
-    public List<Taches> getAllTaches(){
-        return tachesRepository.findAll();
+    public List<TacheDTO> getAllTaches(){
+        List<TachesEntity> tasks = tachesRepository.findAll();
+        return TachesMapper.toList(tasks);
     }
 
-    public Taches getTachesById(Long id){
-        return tachesRepository.findById(id).orElseThrow(() -> new RuntimeException("Taches n'existe pas"));
+    public TacheDTO getTachesById(Long id){
+        return TachesMapper.toDTO(tachesRepository.findById(id).orElseThrow(() -> new RuntimeException("Taches n'existe pas")));
     }
 
-    public Taches createTaches(TacheRequest tacheRequest){
-        Taches taches = new Taches();
+    public TacheDTO createTaches(TacheDTO tacheDTO){
+        TachesEntity taches = new TachesEntity();
 
-        taches.setTitre(tacheRequest.getTitre());
-        taches.setDescription(tacheRequest.getDescription());
-        taches.setDateEcheance(tacheRequest.getDateEcheance());
-        taches.setPriorite(tacheRequest.getPriorite());
+        taches.setTitre(tacheDTO.titre());
+        taches.setDescription(tacheDTO.description());
+        taches.setDateEcheance(tacheDTO.dateEcheance());
+        taches.setPriorite(tacheDTO.priorite());
 
-        Statuts statuts = statutsRepository.findById(tacheRequest.getStatutId())
+        StatutsEntity statuts = statutsRepository.findById(tacheDTO.statutId())
                 .orElseThrow(() -> new RuntimeException("Statut pas trouver"));
         taches.setStatutId(statuts);
 
-        Categories categories = categoriesRepository.findById(tacheRequest.getCategorieId())
+        CategoriesEntity categories = categoriesRepository.findById(tacheDTO.categorieId())
                 .orElseThrow(() -> new RuntimeException("Categorie pas trouver"));
         taches.setCategorieId(categories);
 
-        Utilisateurs utilisateur = utilisateursRepository.findById(tacheRequest.getUtilisateurId())
+        UtilisateursEntity utilisateur = utilisateursRepository.findById(tacheDTO.utilisateurId())
                 .orElseThrow(() -> new RuntimeException("Utilisateur pas trouver"));
         taches.setUtilisateurId(utilisateur);
 
-        return tachesRepository.save(taches);
+        return TachesMapper.toDTO(tachesRepository.save(taches));
     }
 
-    public Taches updateTaches(Long id, TacheRequest tacheRequest){
+    public TacheDTO updateTaches(Long id, TacheDTO tacheDTO){
 
-        Taches taches = tachesRepository.findById(id).orElseThrow(()-> new RuntimeException("Tache pas trouver"));
+        TachesEntity taches = tachesRepository.findById(id).orElseThrow(()-> new RuntimeException("Tache pas trouver"));
 
-        taches.setTitre(tacheRequest.getTitre());
-        taches.setDescription(tacheRequest.getDescription());
-        taches.setDateEcheance(tacheRequest.getDateEcheance());
-        taches.setPriorite(tacheRequest.getPriorite());
+        taches.setTitre(tacheDTO.titre());
+        taches.setDescription(tacheDTO.description());
+        taches.setDateEcheance(tacheDTO.dateEcheance());
+        taches.setPriorite(tacheDTO.priorite());
 
-        Statuts statut = statutsRepository.findById(tacheRequest.getStatutId())
+        StatutsEntity statut = statutsRepository.findById(tacheDTO.statutId())
                 .orElseThrow(() -> new RuntimeException("Statut pas trouver"));
         taches.setStatutId(statut);
 
-        Categories categorie = categoriesRepository.findById(tacheRequest.getCategorieId())
+        CategoriesEntity categorie = categoriesRepository.findById(tacheDTO.categorieId())
                 .orElseThrow(() -> new RuntimeException("Categorie pas trouver "));
         taches.setCategorieId(categorie);
 
-        return tachesRepository.save(taches);
+        return TachesMapper.toDTO(tachesRepository.save(taches));
     }
 
-    public List<Taches> searchTachesByTitre(String titre){
-        return tachesRepository.findByTitre(titre);
+    public List<TachesEntity> searchTachesByTitre(String titre){
+        return tachesRepository.findTachesEntityByTitreContainingIgnoreCase(titre);
     }
 
     public void deleteTaches(Long id){

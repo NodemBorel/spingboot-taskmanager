@@ -1,7 +1,8 @@
-package com.klivar.taskmanager.controller;
+package com.klivar.taskmanager.web.controller;
 
-import com.klivar.taskmanager.model.Taches;
+import com.klivar.taskmanager.repository.entity.TachesEntity;
 import com.klivar.taskmanager.service.TachesService;
+import com.klivar.taskmanager.web.dto.TacheDTO;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,23 +19,23 @@ public class TachesController {
     }
 
     @GetMapping
-    public List<Taches> getAllTaches(){
+    public List<TacheDTO> getAllTaches(){
         return tachesService.getAllTaches();
     }
 
     @GetMapping("/{id}")
-    public Taches getTachesById(@PathVariable Long id){
+    public TacheDTO getTachesById(@PathVariable Long id){
         return tachesService.getTachesById(id);
     }
 
     @PostMapping
-    public Taches createTaches(@RequestBody TacheRequest tacheRequest){
-        return tachesService.createTaches(tacheRequest);
+    public TacheDTO createTaches(@RequestBody TacheDTO tacheDTO){
+        return tachesService.createTaches(tacheDTO);
     }
 
     @PutMapping("/{id}")
-    public Taches updateTaches(@PathVariable Long id, @RequestBody TacheRequest tacheRequest){
-        return tachesService.updateTaches(id, tacheRequest);
+    public TacheDTO updateTaches(@PathVariable Long id, @RequestBody TacheDTO tacheDTO){
+        return tachesService.updateTaches(id, tacheDTO);
     }
 
     @DeleteMapping("/{id}")
@@ -43,7 +44,7 @@ public class TachesController {
     }
 
     @GetMapping("/search")
-    public List<Taches> searchTachesByTitre(@RequestParam String titre){
+    public List<TachesEntity> searchTachesByTitre(@RequestParam String titre){
         return tachesService.searchTachesByTitre(titre);
     }
 }
